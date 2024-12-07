@@ -7,7 +7,7 @@ bot=telebot.TeleBot(token)
 @bot.message_handler(commands=['start'])
 def start_message(message):
   markup= types.InlineKeyboardMarkup()
-  markup.add(types.InlineKeyboardButton('Прикладное', callback_data='var1' ))
+  markup.add(types.InlineKeyboardButton('Пидорское', callback_data='var1' ))
   markup.add(types.InlineKeyboardButton('Фундаментальное', callback_data='var2'))
   bot.send_message(message.chat.id, "Начнем же смертельный бой", reply_markup= markup)
 
