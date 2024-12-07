@@ -33,6 +33,7 @@ import pandas as pd
 #     for item in soup.select('dd'):  # Измените селектор в зависимости от структуры страницы
 #         print(item)
 
+
 import fitz  # PyMuPDF
 
 # Путь к вашему PDF-файлу
