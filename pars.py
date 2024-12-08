@@ -1,93 +1,85 @@
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
-
-# URL_TEMPLATE = "https://mccme.ru/ru/nmu/courses-of-nmu/osen-20242025/"
+#
+# #  - переназвать переменные чтобы не конфликтовали
+# URL_TEMPLATE = "https://www.mi-ras.ru/index.php?c=noc2425_1"
 # r = requests.get(URL_TEMPLATE)
 # soup = bs(r.text, "html.parser")
-# # cours_names = list(set(map(str, soup.find_all('dd'))))
-# raw = set(soup.find_all('dd'))
+# courses = (soup.find_all('script', language = None, type = None, src = None))
+# # a = courses[courses.index('let semester'):courses.index("new Vue")]
+# raw_mian = {}
+# a= str(courses[0])
+# # for i in a:
+# #     print(i)
+# #     print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+# import json
 #
-# c = 0
-# for name in raw:
-#     separ = (str(name.a)).find(">") +1
-#     c+=1
-#     # print(str(name.a)[separ:-4], name.a["href"], c)
+# # Пример JSON-строки, полученной из JavaScript
+#
+# # Преобразуем JSON-строку в словарь Python
+# semester = json.loads(a)
+#
+# # Теперь вы можете обращаться к данным как к словарю
+# print(semester['semid'])  # "2425-1"
+# print(semester['y1'])     # 2024
+# print(semester['announce']['text_rus'])  # "Просьба ко всем участникам НОЦ..."
+
+# for name in courses:
 #     print(name)
-# import requests
-# from bs4 import BeautifulSoup
-# import pandas as pd
+#     if name.a != None:
+#         raw_mian[] = name.a['href']
+# for k in raw_ium:
+#     print(k, raw_ium[k])
+
+
+
+# IUM
+# URL_TEMPLATE = "https://mccme.ru/ru/nmu/courses-of-nmu/osen-20242025/"
+# soup = bs(r.text, "html.parser")
+# r = requests.get(URL_TEMPLATE)
+# courses = soup.find_all('dd')
+# raw_ium = {}
+# for name in courses:
+#     if name.a != None:
+#         raw_ium[str(name.a)[(str(name.a).index('>') +1):-4]] = name.a['href']
+# for k in raw_ium:
+#     print(k, raw_ium[k])
+
+# PDF
+# import fitz
 #
-# # URL страницы для парсинга
-# url = 'https://old.mccme.ru/ium/s24/s24.html'
-# # Отправляем GET-запрос к странице
-# response = requests.get(url)
+# pdf_path = '+ course_book_2425.pdf'
+# raw = []
+# current = {}
+# final = []
 #
-# # Проверяем, что запрос выполнен успешно
-# if response.status_code == 200:
-#     # Парсим содержимое страницы
-#     soup = BeautifulSoup(response.text, 'html.parser')
+# with fitz.open(pdf_path) as pdf:
+#     for i in range(1, 6):
+#         page = pdf[i]
+#         text = page.get_text()
+#         if text:
+#             lines = list(text.split('\n'))
+#             for _ in lines:
+#                 if len(_) > 5 and ("Course descriptions" not in _):
+#                     raw.append(_)
+#     counter = raw.index("Описания курсов на русском") + 2
+#     while counter < len(raw):
+#         cc = -1
+#         if '(' in raw[counter]:
+#             cc = raw[counter].index("(")
 #
-#     # Находим все элементы, содержащие названия курсов и ссылки
-#     courses = []
-#     for item in soup.select('dd'):  # Измените селектор в зависимости от структуры страницы
-#         print(item)
-
-
-import fitz  # PyMuPDF
-
-# Путь к вашему PDF-файлу
-pdf_path = '+ course_book_2425.pdf'
-raw = []
-current = {}
-final = []
-# Функция для извлечения оглавления
-# def extract_contents(pdf_path):
-#     contents = []
-#     # Открываем PDF-файл
-#     with fitz.open(pdf_path) as pdf:
-#         for i in range(1, 6):
-#             page = pdf[i]
-#             text = page.get_text()
-#             if text:
-#                 lines = list(text.split('\n'))
-#                 start = lines.index("Описания курсов на русском")
-#                 for _ in range(start, len(lines)):
-#                     print(lines[_])
-#                     contents.append((lines[_].strip(), i + 1))  # i + 1, так как страницы начинаются с 1
-#     return contents
 #
-# # Извлекаем оглавление
-# contents = extract_contents(pdf_path)
+#         name = raw[counter][:cc]
+#         if raw[counter][-1].isnumeric():
+#             page = raw[counter][-3::]
+#         else:
+#             page = raw[counter+1][-3::]
+#             counter+=1
+#         counter +=1
+#         current[name] = page
 #
-# # Выводим названия курсов и номера страниц
-# for course, page in contents:
-#     print(f"Курс: {course}, Страница: {page}")
-with fitz.open(pdf_path) as pdf:
-    for i in range(1, 6):
-        page = pdf[i]
-        text = page.get_text()
-        if text:
-            lines = list(text.split('\n'))
-            for _ in lines:
-                if len(_) > 5 and ("Course descriptions" not in _):
-                    raw.append(_)
-    counter = raw.index("Описания курсов на русском") + 2
-    while counter < len(raw):
-        cc = -1
-        if '(' in raw[counter]:
-            cc = raw[counter].index("(")
+#
+# df = pd.DataFrame(list(current.items()), columns=['Ключи', 'Значения'])
+# df.to_excel('output.xlsx', index=False)
 
-
-        name = raw[counter][:cc]
-        if raw[counter][-1].isnumeric():
-            page = raw[counter][-3::]
-        else:
-            page = raw[counter+1][-3::]
-            counter+=1
-        counter +=1
-        current[name] = page
-
-
-df = pd.DataFrame(list(current.items()), columns=['Ключи', 'Значения'])
-df.to_excel('output.xlsx', index=False)
