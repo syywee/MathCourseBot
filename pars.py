@@ -6,7 +6,7 @@ from openpyxl.styles import Alignment
 import fitz
 
 current = {}
-# IUM
+#  IUM
 url = "https://mccme.ru/ru/nmu/courses-of-nmu/osen-20242025/"
 r = requests.get(url)
 soup = bs(r.text, "html.parser")
@@ -25,21 +25,24 @@ with fitz.open(pdf_path) as pdf:
         if text:
             lines = list(text.split('\n'))
             for _ in lines:
-                if len(_) > 5 and ("Course descriptions" not in _):
+                if len(_) > 5:
                     raw.append(_)
     counter = raw.index("Описания курсов на русском") + 2
     while counter < len(raw):
-        cc = -1
-        if '(' in raw[counter]:
-            cc = raw[counter].index("(")
-        name = raw[counter][:cc]
-        if raw[counter][-1].isnumeric():
-            page = raw[counter][-3::]
+        if "Course descriptions" in raw[counter]:
+            break
         else:
-            page = raw[counter+1][-3::]
-            counter+=1
-        counter +=1
-        current[name] = page
+            cc = -1
+            if '(' in raw[counter]:
+                cc = raw[counter].index("(")
+            name = raw[counter][:cc]
+            if raw[counter][-1].isnumeric():
+                page = raw[counter][-3::]
+            else:
+                page = raw[counter+1][-3::]
+                counter+=1
+            counter +=1
+            current[name] = page
 
 df = pd.DataFrame(list(current.items()), columns=['name', 'link'])
 df['lvl'] = ''
