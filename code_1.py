@@ -7,27 +7,39 @@ import pandas as pd
 
 token='7843616127:AAGn8WMZFim-9XgMn-CwirVRdgzR4w7MFgY'
 bot=telebot.TeleBot(token)
+data = pd.read_csv('Raw_Table - Sheet1.csv')
+
+def searcher(course_type):
+    message = []
+    for index, row in data[data[course_type] == 1.0].iterrows():
+        if row['link'][1:].isdigit() == True: 
+            link_course = f'Ссылка на курсбук матфака: https://www.dropbox.com/scl/fi/26o842k1rxnnhkzkg6wpu/course_book_2425.pdf?rlkey=x3qdfggkfnz67ab9bgoe0egyo&e=2&dl=0 Страница: {row["link"]}.'
+        else:
+            link_course = f'Ссылка на страницу курса НМУ: {row["link"]}'   
+        strochka_v_message = f'Название курса: {row["name"]}. Сложность курса: {row["lvl"]}. {link_course}'
+        message.append(strochka_v_message)
+    return message
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
   markup= types.ReplyKeyboardMarkup()
-  markup.add(types.KeyboardButton('Пидорское'))
-  markup.add(types.KeyboardButton('Фундаментальное'))
-  bot.send_message(message.chat.id, "Начнем же смертельный бой", reply_markup= markup)
+  markup.add(types.KeyboardButton('Прикладные'))
+  markup.add(types.KeyboardButton('Фундаментальные'))
+  bot.send_message(message.chat.id, "Выберите, пожалуйста, какие курсы Вы рассматриваете для внесения в свой иуп:", reply_markup= markup)
   bot.register_next_step_handler(message, on_click)
   
 def on_click(message):
-  if message.text == 'Пидорское':
+  if message.text == 'Прикладные':
     markup_1= types.ReplyKeyboardMarkup()
     btn_1=types.KeyboardButton('Компьютерные науки и АД')
     btn_2=types.KeyboardButton('Матстат и теорвер')
     markup_1.row(btn_1,btn_2)
     btn_4=types.KeyboardButton('Экономика')
     markup_1.row(btn_4)
-    bot.send_message(message.chat.id, 'Педик', reply_markup= markup_1)
-    #bot.register_next_step_handler(message, on_click_1)
-  elif message.text == 'Фундаментальное':
+    bot.send_message(message.chat.id, 'К какому из основных разделов прикладных курсов Вы склоняетесь?', reply_markup= markup_1)
+    bot.register_next_step_handler(message, on_click_1)
+  elif message.text == 'Фундаментальные':
     markup_2= types.ReplyKeyboardMarkup()
     btn_1=types.KeyboardButton('Алгебра')
     btn_2=types.KeyboardButton('Анализ')
@@ -35,11 +47,23 @@ def on_click(message):
     btn_3=types.KeyboardButton('Теория чисел')
     btn_4=types.KeyboardButton('Геометрия')
     markup_2.row(btn_3,btn_4)
-    bot.send_message(message.chat.id, 'Сначала разберемся с разделом:', reply_markup= markup_2)
+    bot.send_message(message.chat.id, 'Выберете категорию фундаментальной математической дисциплины, из которой Вы бы больше хотели зачесть спецкурс:', reply_markup= markup_2)
     #bot.register_next_step_handler(message, on_click_2)
   
-# def on_click_2(message):
-#   if message.text == 'Компьютерные науки и АД':
+def on_click_1(message):
+  if message.text == 'Компьютерные науки и АД':
+    for el in searcher('CS and DS'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+  elif message.text == 'Матстат и теорвер':
+    for el in searcher('Math.Stat and Probability'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+  elif message.text == 'Экономика':
+    for el in searcher('Economics'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+    
     
     
     
