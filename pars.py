@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
+import openpyxl
 from openpyxl import load_workbook
-from openpyxl.styles import Alignment
+
 import fitz
 
 current = {}
@@ -47,12 +48,28 @@ with fitz.open(pdf_path) as pdf:
 df = pd.DataFrame(list(current.items()), columns=['name', 'link'])
 df['lvl'] = ''
 df['algem'] = ''
+df['Calculus'] = ''
+df['Geometry'] = ''
+df['Algebra'] = ''
+df['Applied'] = ''
+df['Physics'] = ''
+df['Number Theory'] = ''
+df['Topology'] = ''
+df['Logic'] = ''
+df['Math.Stat and Probability'] = ''
+df['Economics'] = ''
+df['CS and DS'] = ''
+df['Diff Gem'] = ''
+df['Dynamics and Diff.Equations'] = ''
+
 df.to_excel('Raw_Table.xlsx', index=False)
 wb = load_workbook('Raw_Table.xlsx')
 ws = wb.active
-ws.column_dimensions['A'].width = 50  # Ширина первого столбца (Ключи)
-ws.column_dimensions['B'].width = 50  # Ширина второго столбца (Значения)
-ws.column_dimensions['C'].width = 20  # Ширина третьего столбца (кул)
-ws.column_dimensions['D'].width = 20  # Ширина четвертого столбца (ммм)
+ws.column_dimensions['A'].width = 60  # Ширина первого столбца (Ключи)
+ws.column_dimensions['B'].width = 20  # Ширина второго столбца (Значения)
+for col in range(3, 27):  # 1 до 26 соответствует A-Z
+    ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 20
+
 wb.save('Raw_Table.xlsx')
+
 
