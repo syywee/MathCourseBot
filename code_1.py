@@ -13,10 +13,10 @@ def searcher(course_type):
     message = []
     for index, row in data[data[course_type] == 1.0].iterrows():
         if row['link'][1:].isdigit() == True: 
-            link_course = f'Ссылка на курсбук матфака: https://www.dropbox.com/scl/fi/26o842k1rxnnhkzkg6wpu/course_book_2425.pdf?rlkey=x3qdfggkfnz67ab9bgoe0egyo&e=2&dl=0 Страница: {row["link"]}.'
+            link_course = f'<b>Подробнее о курсе:</b> https://www.dropbox.com/scl/fi/26o842k1rxnnhkzkg6wpu/course_book_2425.pdf?rlkey=x3qdfggkfnz67ab9bgoe0egyo&e=2&dl=0<br> <b>Страница</b>: {row["link"]}.<br>'
         else:
-            link_course = f'Ссылка на страницу курса НМУ: {row["link"]}'   
-        strochka_v_message = f'Название курса: {row["name"]}. Сложность курса: {row["lvl"]}. {link_course}'
+            link_course = f'<b>Ссылка на страницу курса НМУ</b>: {row["link"]}<br>'   
+        strochka_v_message = f'<b>Название курса:</b> {row["name"]}.<br> <b>Сложность курса</b>: {int(row["lvl"])}. {link_course}'
         message.append(strochka_v_message)
     return message
 
@@ -48,8 +48,46 @@ def on_click(message):
     btn_4=types.KeyboardButton('Геометрия')
     markup_2.row(btn_3,btn_4)
     bot.send_message(message.chat.id, 'Выберете категорию фундаментальной математической дисциплины, из которой Вы бы больше хотели зачесть спецкурс:', reply_markup= markup_2)
-    #bot.register_next_step_handler(message, on_click_2)
-  
+    bot.register_next_step_handler(message, on_click_2) #, parse_mode='html'
+    
+def on_click_2(message):  
+  if message.text == 'Алгебра':
+    markup_3= types.ReplyKeyboardMarkup()
+    btn_1=types.KeyboardButton('Логика')
+    btn_2=types.KeyboardButton('Алгебраическая теория чисел')
+    markup_3.row(btn_1,btn_2)
+    btn_4=types.KeyboardButton('Алгебраическая геометрия')
+    markup_3.row(btn_4)
+    bot.send_message(message.chat.id, 'Какой ты сегодня Албеброид?', reply_markup= markup_3)
+    bot.register_next_step_handler(message, on_click_1)
+  elif message.text == 'Анализ':
+    markup_4= types.ReplyKeyboardMarkup()
+    btn_1=types.KeyboardButton('Классический анализ')
+    btn_2=types.KeyboardButton('Дифференциальная геометрия')
+    markup_4.row(btn_1,btn_2)
+    btn_3=types.KeyboardButton('Физика')
+    btn_4=types.KeyboardButton('Дифференциальные уравнения и динамические системы')
+    markup_4.row(btn_3, btn_4)
+    bot.send_message(message.chat.id, 'Ну анализ это бэ, конечно, но какой?', reply_markup= markup_4)
+    bot.register_next_step_handler(message, on_click_1)
+  elif message.text == 'Теория чисел':
+    markup_5= types.ReplyKeyboardMarkup()
+    btn_1=types.KeyboardButton('Аналитическая теория чисел')
+    markup_5.row(btn_1)
+    btn_4=types.KeyboardButton('Алгебраическая теория чисел')
+    markup_5.row(btn_4)
+    bot.send_message(message.chat.id, 'О, наш числовичок, заходи. каких чисел охота?', reply_markup= markup_5)
+    bot.register_next_step_handler(message, on_click_1)
+  elif message.text == 'Геометрия':
+    markup_6= types.ReplyKeyboardMarkup()
+    btn_1=types.KeyboardButton('Дифференциальная геометрия')
+    btn_2=types.KeyboardButton('Алгебраическая геометрия')
+    markup_6.row(btn_1,btn_2)
+    btn_4=types.KeyboardButton('Топология')
+    markup_6.row(btn_4)
+    bot.send_message(message.chat.id, 'Геометров уважаем, а какая интересует геометрия?', reply_markup= markup_6)
+    bot.register_next_step_handler(message, on_click_1) 
+ 
 def on_click_1(message):
   if message.text == 'Компьютерные науки и АД':
     for el in searcher('CS and DS'):
@@ -63,8 +101,45 @@ def on_click_1(message):
     for el in searcher('Economics'):
       bot.send_message(message.chat.id, el)
     bot.send_message(message.chat.id, '/start')
-    
-    
+  elif message.text == 'Логика':
+    for el in searcher('Logic'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start') 
+  elif message.text == 'Алгебраическая теория чисел':
+    for el in searcher('Number Theory'):
+      if el not in searcher('Calculus'):
+        bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start') 
+  elif message.text == 'Алгебраическая геометрия':
+    for el in searcher('algem'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start') 
+  elif message.text == 'Классический анализ':
+    for el in searcher('Calculus'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start') 
+  elif message.text == 'Дифференциальная геометрия':
+    for el in searcher('Diff Gem'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+  elif message.text == 'Физика':
+    for el in searcher('Physics'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+  elif message.text == 'Дифференциальные уравнения и динамические системы':
+    for el in searcher('Dynamics and Diff.Equations'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+  elif message.text == 'Аналитическая теория чисел':
+    for el in searcher('Number Theory'):
+      if el in searcher('Calculus'):
+        bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start')
+  elif message.text == 'Топология':
+    for el in searcher('Topology'):
+      bot.send_message(message.chat.id, el)
+    bot.send_message(message.chat.id, '/start') 
+  
     
     
 
