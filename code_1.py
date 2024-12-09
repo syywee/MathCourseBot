@@ -12,11 +12,11 @@ data = pd.read_csv('Raw_Table - Sheet1.csv')
 def searcher(course_type):
     message = []
     for index, row in data[data[course_type] == 1.0].iterrows():
-        if row['link'][1:].isdigit() == True: 
-            link_course = f'<b>Подробнее о курсе:</b> https://www.dropbox.com/scl/fi/26o842k1rxnnhkzkg6wpu/course_book_2425.pdf?rlkey=x3qdfggkfnz67ab9bgoe0egyo&e=2&dl=0 <b>Страница</b>: {row["link"]}.'
+        if row['link'][1:].isdigit() == True: #<a href="http://www.example.com/">inline URL</a>
+            link_course = f'<b>Подробнее о курсе:</b> <a href="https://www.dropbox.com/scl/fi/26o842k1rxnnhkzkg6wpu/course_book_2425.pdf?rlkey=x3qdfggkfnz67ab9bgoe0egyo&e=2&dl=0">ЗДЕСЬ</a> \n<b>Страница</b>: {row["link"]}.\n'
         else:
-            link_course = f'<b>Ссылка на страницу курса НМУ</b>: {row["link"]}'   
-        strochka_v_message = f'<b>Название курса:</b> {row["name"]}. <b>Сложность курса</b>: {int(row["lvl"])}. {link_course}'
+            link_course = f'<b>Ссылка на страницу курса НМУ</b>: {row["link"]}\n'   
+        strochka_v_message = f'<b>Название курса:</b> {row["name"]}\n<b>Сложность курса</b>: {int(row["lvl"])}\n{link_course}\n'
         message.append(strochka_v_message)
     return message
 
@@ -92,56 +92,98 @@ def on_click_1(message):
   if message.text == 'Компьютерные науки и АД':
     for el in searcher('CS and DS'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Матстат и теорвер':
     for el in searcher('Math.Stat and Probability'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Экономика':
     for el in searcher('Economics'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Логика':
     for el in searcher('Logic'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start') 
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3) 
   elif message.text == 'Алгебраическая теория чисел':
     for el in searcher('Number Theory'):
       if el not in searcher('Calculus'):
         bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start') 
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Алгебраическая геометрия':
     for el in searcher('algem'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start') 
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3) 
   elif message.text == 'Классический анализ':
     for el in searcher('Calculus'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start') 
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Дифференциальная геометрия':
     for el in searcher('Diff Gem'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Физика':
     for el in searcher('Physics'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Дифференциальные уравнения и динамические системы':
     for el in searcher('Dynamics and Diff.Equations'):
       bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Аналитическая теория чисел':
     for el in searcher('Number Theory'):
       if el in searcher('Calculus'):
         bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start')
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
   elif message.text == 'Топология':
     for el in searcher('Topology'):
-      bot.send_message(message.chat.id, el, parse_mode='html')
-    bot.send_message(message.chat.id, '/start') 
-  
-    
-    
+      bot.send_message(message.chat.id, el, parse_mode='html') 
+    markup_6= types.ReplyKeyboardMarkup()
+    markup_6.add(types.InlineKeyboardButton('Перейти в начало...', callback_data='start'))
+    bot.send_message(message.chat.id, 'Спасибо, что воспользовались нашим ботом, для повторного использования бота нажмите на кнопку ниже:', reply_markup=markup_6)
+    bot.register_next_step_handler(message, on_click_3)
+ 
+def on_click_3(message):     
+  markup= types.ReplyKeyboardMarkup()
+  markup.add(types.KeyboardButton('Прикладные'))
+  markup.add(types.KeyboardButton('Фундаментальные'))
+  bot.send_message(message.chat.id, "<b>Выберите</b>, пожалуйста, какие курсы Вы рассматриваете для внесения в свой иуп:", reply_markup= markup, parse_mode='HTML')
+  bot.register_next_step_handler(message, on_click)
+
+   
 
 bot.infinity_polling() 
 
