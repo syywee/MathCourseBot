@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup as bs
 import pandas as pd
 
 
-token='7843616127:AAGn8WMZFim-9XgMn-CwirVRdgzR4w7MFgY'
+token=''
 bot=telebot.TeleBot(token)
 data = pd.read_csv('Raw_Table - Sheet1.csv')
 
